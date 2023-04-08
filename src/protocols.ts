@@ -23,17 +23,17 @@ export type Cep = {
   cep: string;
 };
 
-export type Body = {
-  name?: string;
-  cpf?: string;
-  birthday?: string;
-  phone?: string;
-
-  cep?: string;
-  street?: string;
-  city?: string;
-  number?: string;
-  state?: string;
-  neighborhood?: string;
-  addressDetail?: string;
+export type Test = {
+  name: string;
+  cpf: string;
+  birthday: string;
+  phone: string;
+  address: object;
+  cep: string;
+  street: string;
+  city: string;
+  number: string;
+  state: string;
+  neighborhood: string;
+  addressDetail: string;
 };

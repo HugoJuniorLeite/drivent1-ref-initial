@@ -2,7 +2,7 @@ import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest, authenticateToken } from '@/middlewares';
 import enrollmentsService from '@/services/enrollments-service';
-import { Cep } from '@/protocols';
+import { Cep, Test } from '@/protocols';
 
 export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
@@ -17,16 +17,13 @@ export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Respon
 }
 
 export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, res: Response) {
-  //  const userId:number = req.userId
+  const dados = req.body;
+  const userId: number = req.userId;
 
-  // console.log(req.body, "body")
+  const params = { userId, ...dados };
 
-  //if(!req.body.name || !req.body.cpf || !req.body.birthday || !req.body.phone) {return res.sendStatus(httpStatus.BAD_REQUEST)}
   try {
-    await enrollmentsService.createOrUpdateEnrollmentWithAddress({
-      ...req.body,
-      userId: req.userId,
-    });
+    await enrollmentsService.createOrUpdateEnrollmentWithAddress(params);
 
     return res.sendStatus(httpStatus.OK);
   } catch (error) {

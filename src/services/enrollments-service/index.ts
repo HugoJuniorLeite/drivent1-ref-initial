@@ -41,6 +41,7 @@ function getFirstAddress(firstAddress: Address): GetAddressResult {
 type GetAddressResult = Omit<Address, 'createdAt' | 'updatedAt' | 'enrollmentId'>;
 
 async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollmentWithAddress) {
+  console.log(params, 'params');
   const enrollment = exclude(params, 'address');
   const address = getAddressForUpsert(params.address);
 
@@ -54,7 +55,6 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
 
   await addressRepository.upsert(newEnrollment.id, address, address);
 }
-
 function getAddressForUpsert(address: CreateAddressParams) {
   return {
     ...address,
