@@ -2,7 +2,6 @@ import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
 import enrollmentsService from '@/services/enrollments-service';
-//import { string } from 'joi';
 
 export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
@@ -27,15 +26,16 @@ export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, re
 
     return res.sendStatus(httpStatus.OK);
   } catch (error) {
+    console.log(error.message);
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
 
 export async function getAddressFromCEP(req: AuthenticatedRequest, res: Response) {
-  const { dataCep } = req.body;
+  const { cep } = req.params;
 
   try {
-    const address = await enrollmentsService.getAddressFromCEP(dataCep);
+    const address = await enrollmentsService.getAddressFromCEP(cep);
 
     //   console.log(address,"testeeeee")
     return res.status(httpStatus.OK).send(address);
