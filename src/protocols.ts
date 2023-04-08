@@ -18,3 +18,22 @@ export type RequestError = {
   name: string;
   message: string;
 };
+
+export type Cep = {
+  cep: string;
+};
+
+export type Body = {
+  name?: string;
+  cpf?: string;
+  birthday?: string;
+  phone?: string;
+
+  cep?: string;
+  street?: string;
+  city?: string;
+  number?: string;
+  state?: string;
+  neighborhood?: string;
+  addressDetail?: string;
+};
