@@ -13,10 +13,6 @@ async function getAddressFromCEP({ cep }: Cep) {
     throw notFoundError();
   }
 
-  // if (result.data.erro) {
-  //   console.log(result.data.erro)
-  //   throw invalidDataError(['invalid CEP']);
-  // }
   return result.data;
 }
 
