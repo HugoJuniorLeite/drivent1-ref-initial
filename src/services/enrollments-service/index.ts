@@ -9,13 +9,14 @@ import { Cep } from '@/protocols';
 async function getAddressFromCEP({ cep }: Cep) {
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
 
-  if (!result.data) {
+  if (!result.data || result.data.erro) {
     throw notFoundError();
   }
 
-  if (result.data.erro) {
-    throw invalidDataError(['invalid CEP']);
-  }
+  // if (result.data.erro) {
+  //   console.log(result.data.erro)
+  //   throw invalidDataError(['invalid CEP']);
+  // }
   return result.data;
 }
 
