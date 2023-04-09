@@ -17,13 +17,16 @@ export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Respon
 }
 
 export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, res: Response) {
-  const dados = req.body;
-  const userId: number = req.userId;
+  //  const dados = req.body as Test
+  //const userId: number = req.userId;
 
-  const params = { userId, ...dados };
+  // const params = { userId, ...dados };
 
   try {
-    await enrollmentsService.createOrUpdateEnrollmentWithAddress(params);
+    await enrollmentsService.createOrUpdateEnrollmentWithAddress({
+      ...req.body,
+      userId: req.userId,
+    });
 
     return res.sendStatus(httpStatus.OK);
   } catch (error) {
