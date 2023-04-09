@@ -2,7 +2,7 @@ import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest, authenticateToken } from '@/middlewares';
 import enrollmentsService from '@/services/enrollments-service';
-import { Cep, Test } from '@/protocols';
+import { Cep } from '@/protocols';
 
 export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
@@ -17,11 +17,6 @@ export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Respon
 }
 
 export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, res: Response) {
-  //  const dados = req.body as Test
-  //const userId: number = req.userId;
-
-  // const params = { userId, ...dados };
-
   try {
     await enrollmentsService.createOrUpdateEnrollmentWithAddress({
       ...req.body,

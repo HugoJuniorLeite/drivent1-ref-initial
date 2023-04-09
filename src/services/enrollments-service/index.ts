@@ -1,6 +1,6 @@
 import { Address, Enrollment } from '@prisma/client';
 import { request } from '@/utils/request';
-import { notFoundError } from '@/errors';
+import { invalidDataError, notFoundError } from '@/errors';
 import addressRepository, { CreateAddressParams } from '@/repositories/address-repository';
 import enrollmentRepository, { CreateEnrollmentParams } from '@/repositories/enrollment-repository';
 import { exclude } from '@/utils/prisma-utils';
@@ -13,6 +13,9 @@ async function getAddressFromCEP({ cep }: Cep) {
     throw notFoundError();
   }
 
+  if (result.data.erro) {
+    throw invalidDataError(['invalid CEP']);
+  }
   return result.data;
 }
 
@@ -44,18 +47,10 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   const enrollment = exclude(params, 'address');
   const address = getAddressForUpsert(params.address);
 
-  console.log(address.cep, 'address');
-
   try {
-    const teste = await getAddressFromCEP({ cep: address.cep });
-    if (teste.erro === true) {
-      throw notFoundError();
-    }
-    console.log(teste, 'teste');
-  } catch (error) {
-    if (error === 400) {
-      throw notFoundError();
-    }
+    await getAddressFromCEP({ cep: address.cep });
+  } catch {
+    throw invalidDataError(['invalid CEP']);
   }
 
   const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, 'userId'));
