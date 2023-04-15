@@ -1,10 +1,12 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
-async function all(/*data: Prisma.SessionUncheckedCreateInput*/) {
+async function all(userId: number) {
   console.log('teste2');
 
-  return prisma.ticket.findMany();
+  return prisma.ticket.findFirst({
+    where: { id: userId },
+  });
 }
 
 const ticketsRepository = {

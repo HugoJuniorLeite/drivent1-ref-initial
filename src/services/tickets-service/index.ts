@@ -2,8 +2,8 @@ import { notFoundError } from '@/errors';
 
 import ticketsRepository from '@/repositories/tickets-repository';
 
-async function getTicketsAll() {
-  const result = await ticketsRepository.all();
+async function getTicketsById(userId: number) {
+  const result = await ticketsRepository.all(userId);
 
   console.log(result, 'retorno find');
 
@@ -15,7 +15,7 @@ async function getTicketsAll() {
 }
 
 const ticketsService = {
-  getTicketsAll,
+  getTicketsById,
 };
 
 export default ticketsService;
