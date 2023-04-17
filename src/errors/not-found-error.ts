@@ -6,3 +6,9 @@ export function notFoundError(): ApplicationError {
     message: 'No result for this search!',
   };
 }
+export function badRequest(): ApplicationError {
+  return {
+    name: 'BarRequest',
+    message: 'Bad Request!',
+  };
+}

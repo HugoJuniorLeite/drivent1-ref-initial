@@ -27,3 +27,9 @@ export type RequestError = {
   name: string;
   message: string;
 };
+
+export type Body = {
+  ticketTypeId: number;
+  enrollmentId: number;
+  status?: string;
+};
