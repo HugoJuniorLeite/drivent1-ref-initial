@@ -1,10 +1,24 @@
-import { invalidDataError, notFoundError } from '@/errors';
+import { badRequest, invalidDataError, notFoundError, unauthorizedError } from '@/errors';
+import enrollmentRepository from '@/repositories/enrollment-repository';
 import paymentsRepository from '@/repositories/payments-repository';
+import ticketsRepository from '@/repositories/tickets-repository';
 
-async function filterPaymentsById(id: number) {
+async function filterPaymentsById(id: number, userId: number) {
   if (!id) {
-    throw invalidDataError(null);
+    throw badRequest();
   }
+
+  const getTicket = await ticketsRepository.getTicketId(+id);
+
+  const enrollmentId = await enrollmentRepository.getEnrolment(+getTicket.enrollmentId);
+
+  // const enrolmentId = enrollmentRepository.getEnrolment(+id);
+  // console.log(enrolmentId, "enrolmenttttttttttttttttttt");
+
+  // const result = enrollmentRepository.findWithAddressByUserId((await enrolmentId).userId);
+  // if(!result){
+  //   throw unauthorizedError()
+  // }
   const payment = await paymentsRepository.all(id);
 
   // console.log(payment,"service")

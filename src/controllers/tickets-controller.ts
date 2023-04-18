@@ -9,7 +9,6 @@ export async function getTicketsById(req: AuthenticatedRequest, res: Response) {
 
   try {
     const ticketsAll = await ticketsService.getTicketsById(userId);
-    //    console.log(ticketsAll, 'ticketsAll');
 
     return res.status(httpStatus.OK).send(ticketsAll);
   } catch (error) {
@@ -30,14 +29,9 @@ export async function getTicketsType(req: AuthenticatedRequest, res: Response) {
 export async function createTicket(req: AuthenticatedRequest, res: Response) {
   const { ticketTypeId } = req.body;
   const { userId } = req;
-  console.log(req.body, 'bodyyyyyyyyyyyyyyy');
 
-  console.log(ticketTypeId, 'ticketTypeId', userId, 'userId');
   try {
     //ticket type e userId
-    if (!ticketTypeId) {
-      return res.sendStatus(httpStatus.BAD_REQUEST);
-    }
 
     const ticket = await ticketsService.createTicket(+ticketTypeId, +userId);
 

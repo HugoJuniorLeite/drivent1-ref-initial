@@ -8,7 +8,7 @@ export function notFoundError(): ApplicationError {
 }
 export function badRequest(): ApplicationError {
   return {
-    name: 'BarRequest',
+    name: 'BadRequest',
     message: 'Bad Request!',
   };
 }

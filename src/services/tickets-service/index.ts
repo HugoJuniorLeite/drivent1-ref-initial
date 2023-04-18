@@ -1,6 +1,7 @@
 //import { TicketStatus } from '@prisma/client';
 //import { BAD_REQUEST } from 'http-status';
 //import { number, object } from 'joi';
+import httpStatus from 'http-status';
 import enrollmentsService from '../enrollments-service';
 import { badRequest, notFoundError } from '@/errors';
 import enrollmentRepository from '@/repositories/enrollment-repository';
@@ -39,6 +40,10 @@ async function getTicketsType() {
 }
 
 async function createTicket(ticketTypeId: number, userId: number) {
+  if (!ticketTypeId) {
+    return httpStatus.BAD_REQUEST;
+  }
+
   const getEnrollmentId = await enrollmentRepository.findWithAddressByUserId(+userId);
   if (!getEnrollmentId) {
     throw badRequest();
@@ -55,11 +60,8 @@ async function createTicket(ticketTypeId: number, userId: number) {
   const ticketType = await ticketsRepository.allType();
 
   const ticketId = await ticketsRepository.create(body);
-  console.log(ticketId, 'wwwwwwww');
 
   const ticketT = await ticketsRepository.getType(Number(ticketId.ticketTypeId));
-
-  console.log(ticketT, 'ticketTypeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
   if (!ticketType) {
     throw badRequest();

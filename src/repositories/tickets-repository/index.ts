@@ -11,9 +11,24 @@ async function all(id: number) {
     },
   });
 }
+async function ticketByEnrolment(enrolmentId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      enrollmentId: enrolmentId,
+    },
+  });
+}
+
 async function getType(ticketTypeId: number) {
   return prisma.ticketType.findUnique({
     where: { id: +ticketTypeId },
+  });
+}
+async function getTicketId(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
   });
 }
 
@@ -22,8 +37,6 @@ async function allType() {
 }
 
 async function create(body: Body) {
-  console.log(body, 'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
-
   return prisma.ticket.create({
     data: {
       ...body,
@@ -37,6 +50,8 @@ const ticketsRepository = {
   allType,
   create,
   getType,
+  ticketByEnrolment,
+  getTicketId,
 };
 
 export default ticketsRepository;
