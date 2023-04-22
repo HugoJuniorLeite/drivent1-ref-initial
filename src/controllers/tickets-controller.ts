@@ -1,48 +1,37 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
-import ticketsService from '@/services/tickets-service';
-import { badRequest, notFoundError } from '@/errors';
+import ticketService from '@/services/tickets-service';
+import { InputTicketBody } from '@/protocols';
 
-export async function getTicketsById(req: AuthenticatedRequest, res: Response) {
-  const { userId } = req;
-
+export async function getTicketTypes(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
   try {
-    const ticketsAll = await ticketsService.getTicketsById(userId);
-
-    return res.status(httpStatus.OK).send(ticketsAll);
-  } catch (error) {
-    return res.sendStatus(httpStatus.NOT_FOUND);
+    const ticketTypes = await ticketService.getTicketType();
+    return res.status(httpStatus.OK).send(ticketTypes);
+  } catch (e) {
+    next(e);
   }
 }
 
-export async function getTicketsType(req: AuthenticatedRequest, res: Response) {
-  try {
-    const ticketsType = await ticketsService.getTicketsType();
-
-    return res.status(httpStatus.OK).send(ticketsType);
-  } catch (error) {
-    return res.sendStatus(httpStatus.NO_CONTENT);
-  }
-}
-
-export async function createTicket(req: AuthenticatedRequest, res: Response) {
-  const { ticketTypeId } = req.body;
+export async function getTickets(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
   const { userId } = req;
 
   try {
-    //ticket type e userId
+    const ticket = await ticketService.getTicketByUserId(userId);
+    return res.status(httpStatus.OK).send(ticket);
+  } catch (e) {
+    next(e);
+  }
+}
 
-    const ticket = await ticketsService.createTicket(+ticketTypeId, +userId);
+export async function createTicket(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  const { userId } = req;
+  const { ticketTypeId } = req.body as InputTicketBody;
 
+  try {
+    const ticket = await ticketService.createTicket(userId, ticketTypeId);
     return res.status(httpStatus.CREATED).send(ticket);
-  } catch (error) {
-    if (error.name === badRequest) {
-      return res.sendStatus(400);
-    }
-    if (error.name === notFoundError) {
-      return res.sendStatus(404);
-    }
-    return res.sendStatus(httpStatus.NOT_FOUND);
+  } catch (e) {
+    next(e);
   }
 }

@@ -1,57 +1,64 @@
+import { Ticket, TicketStatus, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
-import { Body } from '@/protocols';
-//import { object } from 'joi';
+import { CreateTicketParams } from '@/protocols';
 
-async function all(id: number) {
-  //  console.log(id, 'all');
+async function findTicketTypes(): Promise<TicketType[]> {
+  return prisma.ticketType.findMany();
+}
+
+async function findTicketByEnrollmentId(enrollmentId: number) {
   return prisma.ticket.findFirst({
-    where: { enrollmentId: id },
+    where: { enrollmentId },
+    include: {
+      TicketType: true, //join
+    },
+  });
+}
+
+async function createTicket(ticket: CreateTicketParams) {
+  return prisma.ticket.create({
+    data: ticket,
+  });
+}
+
+async function findTickeyById(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
+    include: {
+      Enrollment: true,
+    },
+  });
+}
+
+async function findTickeWithTypeById(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
     include: {
       TicketType: true,
     },
   });
 }
-async function ticketByEnrolment(enrolmentId: number) {
-  return prisma.ticket.findFirst({
-    where: {
-      enrollmentId: enrolmentId,
-    },
-  });
-}
 
-async function getType(ticketTypeId: number) {
-  return prisma.ticketType.findUnique({
-    where: { id: +ticketTypeId },
-  });
-}
-async function getTicketId(ticketId: number) {
-  return prisma.ticket.findFirst({
+async function ticketProcessPayment(ticketId: number) {
+  return prisma.ticket.update({
     where: {
       id: ticketId,
     },
-  });
-}
-
-async function allType() {
-  return prisma.ticketType.findMany();
-}
-
-async function create(body: Body) {
-  return prisma.ticket.create({
     data: {
-      ...body,
-      status: 'RESERVED',
+      status: TicketStatus.PAID,
     },
   });
 }
 
-const ticketsRepository = {
-  all,
-  allType,
-  create,
-  getType,
-  ticketByEnrolment,
-  getTicketId,
+export default {
+  findTicketTypes,
+  findTicketByEnrollmentId,
+  createTicket,
+  findTickeyById,
+  findTickeWithTypeById,
+  ticketProcessPayment,
 };
-
-export default ticketsRepository;
